@@ -1,25 +1,33 @@
 var Records = React.createClass({
+
   getInitialState: function() {
-    return(
-    { records: this.props.data}
-    )
+    return { records: this.props.data};
   },
+
   getDefaultProps: function() {
-    return(
-    {records: [] }
-    )
+    return {records: [] }
   },
+
   addRecord: function(record) {
-    var records = this.state.records.slice();
-    records.push(record);
+    var records = React.addons.update(this.state.records,
+    { $push: [record] })
     this.setState({ records: records });
   },
+
    deleteRecord: function(record){
-    var records = this.state.records.slice();
-    var index = records.indexOf(record);
-      records.splice(index, 1);
+    var index = this.state.records.indexOf(record);
+    var records = React.addons.update(this.state.records,
+      { $splice: [[index, 1]] });
         this.replaceState({records: records});
   },
+
+  updateRecord: function(record, data) {
+    var index = this.state.records.indexOf(record);
+    var records = React.addons.update(this.state.records,
+      { $splice: [[index, 1, data]] });
+      this.replaceState({ records: records });
+  },
+
   credits: function(){
     var credits = this.state.records.filter(function(val) {
       return val.amount >= 0
@@ -28,6 +36,7 @@ var Records = React.createClass({
       return prev + parseFloat(curr.amount);
     }, 0)
   },
+
    debits: function(){
     var debits = this.state.records.filter(function(val) {
       return val.amount < 0
@@ -36,9 +45,11 @@ var Records = React.createClass({
       return prev + parseFloat(curr.amount);
     }, 0)
   },
+
   balance: function(){
     return this.debits() + this.credits();
   },
+
   render: function(){
   return(
   <div className='records'>
@@ -58,14 +69,15 @@ var Records = React.createClass({
           <th>Actions</th>
         </tr>
       </thead>
-    <tbody>
-      {this.state.records.map(function(record){
-      return <Record record key={record.id} record={record}
-      handleDeleteRecord={this.deleteRecord} />
-      }.bind(this))}
-      </tbody>
-      </table>
+      <tbody>
+        {this.state.records.map(function(record){
+        return <Record record key={record.id} record={record}
+              handleDeleteRecord={this.deleteRecord}
+              handleEditRecord={this.updateRecord} />
+        }.bind(this))}
+        </tbody>
+    </table>
     </div>
-    )
+    );
   }
-})
+});
