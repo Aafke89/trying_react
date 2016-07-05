@@ -42,7 +42,7 @@ var RecordForm = React.createClass({
         <div className='form-group'>
           <input  type='number' className='form-control'
                   placeholder='Amount' name='amount'
-                  value={this.state.date} onChange={this.handleChange}>
+                  value={this.state.amount} onChange={this.handleChange}>
           </input>
         </div>
         <div className='form-group'>

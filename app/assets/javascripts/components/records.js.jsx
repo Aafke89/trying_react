@@ -18,6 +18,7 @@ var Records = React.createClass({
   return(
   <div className='records'>
     <h2 className='title'> Records </h2>
+    <RecordForm handleNewRecord={this.addRecord} />
     <table className='table'>
       <thead>
         <tr>
